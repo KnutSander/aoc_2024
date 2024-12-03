@@ -75,7 +75,7 @@ lists?
 #>
 
 # Read the input file
-$locations = Get-Content -Path .\example.txt
+$locations = Get-Content -Path .\day_1\example.txt
 
 # Split the locations into two lists
 $leftList = @()
@@ -97,6 +97,7 @@ for ($i = 0; $i -lt $leftList.Count; $i++) {
     $distance += [Math]::Abs($leftList[$i] - $rightList[$i])
 }
 
+# Output the result
 $distance
 
 <#
@@ -151,7 +152,7 @@ Once again consider your left and right lists. What is their similarity score?
 #>
 
 # Read the input file
-$locations = Get-Content -Path .\input.txt
+$locations = Get-Content -Path .\day_1\input.txt
 
 # Split the locations into two lists
 $leftList = @()
@@ -170,4 +171,5 @@ foreach ($left in $leftList) {
     $similarityScore += $left * ($rightList | Where-Object {$_ -eq $left}).Count
 }
 
+# Output the result
 $similarityScore
