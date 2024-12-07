@@ -48,7 +48,7 @@ Analyze the unusual data from the engineers. How many reports are safe?
 #>
 
 # Read the input file
-$lines = Get-Content -Path .\day_2\example.txt
+$lines = Get-Content -Path .\day_2\input.txt
 
 # Initialize the counter
 $safeReports = 0
@@ -62,31 +62,97 @@ foreach ($line in $lines) {
     $increasing = $false
     $decreasing = $false
 
-
     # Loop through the numbers
-    for ($i = 0; $i -lt $numbers.Length; $i++) {
-        # Check if the report should be increasing or decreasing based on first difference
-        if($i -eq 0){
-            if ($numbers[$i] -lt $numbers[$i + 1]) {
-                $increasing = $true
-            }
-            elseif ($numbers[$i] -gt $numbers[$i + 1]) {
-                $decreasing = $true
-            }
-        }
-        
-        if($true -eq $increasing){
+    for ($i = 1; $i -lt $numbers.Length; $i++) {
+        $diff = $numbers[$i] - $numbers[$i - 1]
 
+        # Check if the difference is increasing or decreasing
+        if ($diff -gt 0) {
+            $increasing = $true
+        } elseif ($diff -lt 0) {
+            $decreasing = $true
         }
-        elseif($true -eq $decreasing){
 
-        }
-        else {
-            # Report is neither increasing nor decreasing, so report is invalid
+        # Check if the difference is within the range and not zero
+        if ([Math]::Abs($diff) -gt 3 -or $diff -eq 0) {
+            $increasing = $false
+            $decreasing = $false
             break
         }
+    }
+
+    # Check if the report is safe
+    if ($increasing -ne $decreasing) {
+        $safeReports++
     }
 }
 
 # Output the result
 $safeReports
+
+<#
+--- Part Two ---
+
+The engineers are surprised by the low number of safe reports until they realize they forgot to 
+tell you about the Problem Dampener.
+
+The Problem Dampener is a reactor-mounted module that lets the reactor safety systems tolerate a 
+single bad level in what would otherwise be a safe report. It's like the bad level never happened!
+
+Now, the same rules apply as before, except if removing a single level from an unsafe report would 
+make it safe, the report instead counts as safe.
+
+More of the above example's reports are now safe:
+
+    7 6 4 2 1: Safe without removing any level.
+    1 2 7 8 9: Unsafe regardless of which level is removed.
+    9 7 6 2 1: Unsafe regardless of which level is removed.
+    1 3 2 4 5: Safe by removing the second level, 3.
+    8 6 4 4 1: Safe by removing the third level, 4.
+    1 3 6 7 9: Safe without removing any level.
+
+Thanks to the Problem Dampener, 4 reports are actually safe!
+
+Update your analysis by handling situations where the Problem Dampener can remove a single level 
+from unsafe reports. How many reports are now safe?
+#>
+
+# Initialize the counter
+$safeReports = 0
+
+# Read the input file
+$lines = Get-Content -Path .\day_2\input.txt
+
+# Loop through each line
+foreach ($line in $lines) {
+    # Split the line into an array of numbers
+    $numbers = $line -split ' ' | ForEach-Object { [int]$_ }
+
+    # Initialize the flags
+    $increasing = $false
+    $decreasing = $false
+
+    # Loop through the numbers
+    for ($i = 1; $i -lt $numbers.Length; $i++) {
+        $diff = $numbers[$i] - $numbers[$i - 1]
+
+        # Check if the difference is increasing or decreasing
+        if ($diff -gt 0) {
+            $increasing = $true
+        } elseif ($diff -lt 0) {
+            $decreasing = $true
+        }
+
+        # Check if the difference is within the range and not zero
+        if ([Math]::Abs($diff) -gt 3 -or $diff -eq 0) {
+            $increasing = $false
+            $decreasing = $false
+            break
+        }
+    }
+
+    # Check if the report is safe
+    if ($increasing -ne $decreasing) {
+        $safeReports++
+    } 
+}
