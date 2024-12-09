@@ -69,7 +69,8 @@ foreach ($line in $lines) {
         # Check if the difference is increasing or decreasing
         if ($diff -gt 0) {
             $increasing = $true
-        } elseif ($diff -lt 0) {
+        }
+        elseif ($diff -lt 0) {
             $decreasing = $true
         }
 
@@ -131,6 +132,8 @@ foreach ($line in $lines) {
     # Initialize the flags
     $increasing = $false
     $decreasing = $false
+    $dampener = $false
+    $lastChange = $null
 
     # Loop through the numbers
     for ($i = 1; $i -lt $numbers.Length; $i++) {
@@ -139,20 +142,49 @@ foreach ($line in $lines) {
         # Check if the difference is increasing or decreasing
         if ($diff -gt 0) {
             $increasing = $true
-        } elseif ($diff -lt 0) {
+            $lastChange = 1
+        }
+        elseif ($diff -lt 0) {
             $decreasing = $true
+            $lastChange = -1
         }
 
         # Check if the difference is within the range and not zero
-        if ([Math]::Abs($diff) -gt 3 -or $diff -eq 0) {
-            $increasing = $false
-            $decreasing = $false
-            break
+        if ([Math]::Abs($diff) -gt 3 -or $diff -eq 0 -or $increasing -eq $decreasing) {
+            if($dampener -eq $false) {
+                if ($i -ne $numbers.Length - 1) {
+                    $diff = $numbers[$i + 1] - $numbers[$i - 1]
+
+                    if ([Math]::Abs($diff) -gt 3 -or $diff -eq 0) {
+                        $increasing = $false
+                        $decreasing = $false
+                        break
+                    } elseif ($increasing -eq $decreasing) {
+                        if($lastChange -eq 1) {
+                            $increasing = $false
+                        } elseif ($lastChange -eq -1) {
+                            $decreasing = $false
+                        }
+                    }
+                    $i += 1
+                }
+                $dampener = $true
+            } else {
+                $increasing = $false
+                $decreasing = $false
+                break
+            }
         }
     }
 
     # Check if the report is safe
     if ($increasing -ne $decreasing) {
+        #write-host "Safe: $line"
         $safeReports++
-    } 
+    } else {
+        #write-host "Unsafe: $line"
+    }
 }
+
+# Output the result
+$safeReports
