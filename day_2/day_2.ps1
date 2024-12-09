@@ -44,7 +44,6 @@ In the example above, the reports can be found safe or unsafe by checking those 
 So, in this example, 2 reports are safe.
 
 Analyze the unusual data from the engineers. How many reports are safe?
-
 #>
 
 # Read the input file
