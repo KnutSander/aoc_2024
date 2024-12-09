@@ -132,40 +132,27 @@ foreach ($line in $lines) {
     $increasing = $false
     $decreasing = $false
     $dampener = $false
-    $lastChange = $null
 
     # Loop through the numbers
-    for ($i = 1; $i -lt $numbers.Length; $i++) {
-        $diff = $numbers[$i] - $numbers[$i - 1]
+    for ($i = 0; $i -lt ($numbers.Length -1); $i++) {
+        $diff = $numbers[$i] - $numbers[$i + 1]
 
         # Check if the difference is increasing or decreasing
         if ($diff -gt 0) {
             $increasing = $true
-            $lastChange = 1
         }
         elseif ($diff -lt 0) {
             $decreasing = $true
-            $lastChange = -1
         }
 
         # Check if the difference is within the range and not zero
-        if ([Math]::Abs($diff) -gt 3 -or $diff -eq 0 -or $increasing -eq $decreasing) {
+        if ([Math]::Abs($diff) -gt 3 -or $diff -eq 0) {
             if($dampener -eq $false) {
-                if ($i -ne $numbers.Length - 1) {
-                    $diff = $numbers[$i + 1] - $numbers[$i - 1]
-
-                    if ([Math]::Abs($diff) -gt 3 -or $diff -eq 0) {
-                        $increasing = $false
-                        $decreasing = $false
-                        break
-                    } elseif ($increasing -eq $decreasing) {
-                        if($lastChange -eq 1) {
-                            $increasing = $false
-                        } elseif ($lastChange -eq -1) {
-                            $decreasing = $false
-                        }
-                    }
-                    $i += 1
+                $diff = $numbers[$i] - $numbers[$i + 2]
+                if ([Math]::Abs($diff) -gt 3 -or $diff -eq 0) {
+                    $increasing = $false
+                    $decreasing = $false
+                    break
                 }
                 $dampener = $true
             } else {
