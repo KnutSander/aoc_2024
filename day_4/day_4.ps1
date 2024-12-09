@@ -158,31 +158,38 @@ foreach ($lineIndex in 0..($lines.Length - 1)) {
     for ($i = 0; $i -lt $characters.Length; $i++) {
         # Look for A's as they are at the center of the X
         if($characters[$i] -eq 'A' -and $lineIndex - 1 -ge 0 -and $i - 1 -ge 0 -and $lineIndex + 1 -lt $lines.Length -and $i + 1 -lt $characters.Length) {
+            
+            # Get the surrounding characters
+            $upLeft = $lines[$lineIndex - 1][$i - 1]
+            $upRight = $lines[$lineIndex - 1][$i + 1]
+            $downLeft = $lines[$lineIndex + 1][$i - 1]
+            $downRight = $lines[$lineIndex + 1][$i + 1]
+
             # M M 
             #  A
             # S S
-            if($lines[$lineIndex - 1][$i - 1] -eq 'M' -and $lines[$lineIndex - 1][$i + 1] -eq 'M' -and $lines[$lineIndex + 1][$i - 1] -eq 'S' -and $lines[$lineIndex + 1][$i + 1] -eq 'S') {
+            if($upLeft -eq 'M' -and $upRight -eq 'M' -and $downLeft  -eq 'S' -and $downRight -eq 'S') {
                 $xmasCount++
             }
 
             # M S
             #  A
             # M S
-            if($lines[$lineIndex - 1][$i - 1] -eq 'M' -and $lines[$lineIndex - 1][$i + 1] -eq 'S' -and $lines[$lineIndex + 1][$i - 1] -eq 'M' -and $lines[$lineIndex + 1][$i + 1] -eq 'S') {
+            if($upLeft -eq 'M' -and $upRight -eq 'S' -and $downLeft -eq 'M' -and $downRight -eq 'S') {
                 $xmasCount++
             }
             
             # S S
             #  A
             # M M
-            if($lines[$lineIndex - 1][$i - 1] -eq 'S' -and $lines[$lineIndex - 1][$i + 1] -eq 'S' -and $lines[$lineIndex + 1][$i - 1] -eq 'M' -and $lines[$lineIndex + 1][$i + 1] -eq 'M') {
+            if($upLeft -eq 'S' -and $upRight -eq 'S' -and $downLeft -eq 'M' -and $downRight -eq 'M') {
                 $xmasCount++
             }
 
             # S M
             #  A
             # S M
-            if($lines[$lineIndex - 1][$i - 1] -eq 'S' -and $lines[$lineIndex - 1][$i + 1] -eq 'M' -and $lines[$lineIndex + 1][$i - 1] -eq 'S' -and $lines[$lineIndex + 1][$i + 1] -eq 'M') {
+            if($upLeft -eq 'S' -and $upRight -eq 'M' -and $downLeft -eq 'S' -and $downRight -eq 'M') {
                 $xmasCount++
             }
         }
