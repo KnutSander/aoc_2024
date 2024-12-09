@@ -146,3 +146,48 @@ In this example, an X-MAS appears 9 times.
 Flip the word search from the instructions back over to the word search side and try again. How 
 many times does an X-MAS appear?
 #>
+
+# Initialize the counter
+$xmasCount = 0
+
+# Only looking for MAS or SAM, dioagonally and as an X
+foreach ($lineIndex in 0..($lines.Length - 1)) {
+    $line = $lines[$lineIndex]
+    $characters = $line.ToCharArray()
+
+    for ($i = 0; $i -lt $characters.Length; $i++) {
+        # Look for A's as they are at the center of the X
+        if($characters[$i] -eq 'A' -and $lineIndex - 1 -ge 0 -and $i - 1 -ge 0 -and $lineIndex + 1 -lt $lines.Length -and $i + 1 -lt $characters.Length) {
+            # M M 
+            #  A
+            # S S
+            if($lines[$lineIndex - 1][$i - 1] -eq 'M' -and $lines[$lineIndex - 1][$i + 1] -eq 'M' -and $lines[$lineIndex + 1][$i - 1] -eq 'S' -and $lines[$lineIndex + 1][$i + 1] -eq 'S') {
+                $xmasCount++
+            }
+
+            # M S
+            #  A
+            # M S
+            if($lines[$lineIndex - 1][$i - 1] -eq 'M' -and $lines[$lineIndex - 1][$i + 1] -eq 'S' -and $lines[$lineIndex + 1][$i - 1] -eq 'M' -and $lines[$lineIndex + 1][$i + 1] -eq 'S') {
+                $xmasCount++
+            }
+            
+            # S S
+            #  A
+            # M M
+            if($lines[$lineIndex - 1][$i - 1] -eq 'S' -and $lines[$lineIndex - 1][$i + 1] -eq 'S' -and $lines[$lineIndex + 1][$i - 1] -eq 'M' -and $lines[$lineIndex + 1][$i + 1] -eq 'M') {
+                $xmasCount++
+            }
+
+            # S M
+            #  A
+            # S M
+            if($lines[$lineIndex - 1][$i - 1] -eq 'S' -and $lines[$lineIndex - 1][$i + 1] -eq 'M' -and $lines[$lineIndex + 1][$i - 1] -eq 'S' -and $lines[$lineIndex + 1][$i + 1] -eq 'M') {
+                $xmasCount++
+            }
+        }
+    }
+}
+
+# Output the result
+$xmasCount
