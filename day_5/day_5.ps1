@@ -212,18 +212,20 @@ foreach($update in $updates) {
             # Check rules for page
             foreach($rule in $rules) {
                 
-                # Find indexes of before and after pages
+                # Check if the page is before or after in the current rule
                 if($rule.Before -eq $page) {
+                    # If it is before, get the index of the after page
                     $afterIndex = $orderedUpdate.IndexOf($rule.After)
 
-                    # If after page is before before page, update position
+                    # Only update the before position if it is less than the current before position
                     if($afterIndex -ne -1 -and $afterIndex -lt $beforePos) {
                         $beforePos = $afterIndex
                     }
                 } elseif ($rule.After -eq $page) {
+                    # If it is after, get the index of the before page
                     $beforeIndex = $orderedUpdate.IndexOf($rule.Before)
 
-                    # If before page is after after page, update position
+                    # Only update the after position if it is more than the current after position + 1
                     if($beforeIndex -ne -1 -and $beforeIndex + 1 -gt $afterPos) { 
                         $afterPos = $beforeIndex + 1
                     }
